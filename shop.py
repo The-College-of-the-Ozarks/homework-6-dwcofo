@@ -16,9 +16,9 @@ def printLists(book, tBook):
 
 def priceCheck(prompt):
     # https://docs.python.org/3/library/re.html
-    pattern = re.compile('[0-9]*\.[0-9]{2}')
+    pattern = re.compile('^[0-9]*\.[0-9]{2}$')
     price = input(f"{prompt} (Form .00): ")
-    while not pattern.match(price):
+    while not pattern.match(price) and float(price) <= 0:
         price = input(f"Error: invalid price. {prompt} (Form .00): ")
     return price
 
