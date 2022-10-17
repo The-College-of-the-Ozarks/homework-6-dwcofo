@@ -30,7 +30,7 @@ def newItem(book, tBook):
         print(f"I'm sorry, but we already {words} {item} at ${book[item]}")
         return
 
-    book[item] = priceCheck("What will be the price of {item} in dollars")
+    book[item] = priceCheck(f"What will be the price of {item} in dollars")
 
 
 def alterItem(book, tBook):
@@ -40,7 +40,7 @@ def alterItem(book, tBook):
         print(f"I'm sorry, but we don't {words} {item}")
         return
 
-    book[item] = priceCheck("What is the new price of {item} in dollars")
+    book[item] = priceCheck(f"What is the new price of {item} in dollars")
 
 
 buy = {}
@@ -68,6 +68,7 @@ for i, x in enumerate(lines):
     if not re.search('^\$[0-9]+\.*[0-9]*$', temp[2].strip()):
         print(f"Error on line {i + 1}: Improper price format")
         continue
+    temp[2] = temp[2].strip()
     if temp[0] == "Buy":
         buy[temp[1]] = float(temp[2][1:])
     elif temp[0] == "Sell":
@@ -140,7 +141,11 @@ while not re.search('^\w+$', outputFile):
 fileData = [f"Buy\t{x}\t${buy[x]}\n" for x in buy]
 fileData.extend([f"Sell\t{x}\t${sell[x]}\n" for x in sell])
 # I got this from https://docs.python.org/3/tutorial/inputoutput.html
-locFile = open(f"{outputFile}.dat", "w")
+try:
+    locFile = open(f"{outputFile}.dat", "w")
+except:
+    print("Error opening file.")
+    exit(1)
 locFile.writelines(fileData)
 locFile.close()
 print(f"Money from this session is {shopMoney}\nGoodbye!")
