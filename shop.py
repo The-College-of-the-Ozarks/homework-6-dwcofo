@@ -16,10 +16,16 @@ def printLists(book, tBook):
 
 def priceCheck(prompt):
     # https://docs.python.org/3/library/re.html
-    pattern = re.compile('^[0-9]+\.?[0-9]*$')
-    price = input(f"{prompt} (Form .00): ")
-    while not pattern.match(price) and float(price) <= 0:
-        price = input(f"Error: invalid price. {prompt} (Form .00): ")
+    while True:
+        # Instead of searching for a pattern I'm just going to try to cast to float if it fails I ask again.
+        try:
+            price = float(input(f"{prompt} (Form just numbers): "))
+            if price < 0:
+                raise Exception("The price has to be greater than 0")
+        except:
+            print("Error: invalid price.")
+        else:
+            break
     return price
 
 
