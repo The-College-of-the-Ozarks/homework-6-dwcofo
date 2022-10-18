@@ -16,7 +16,7 @@ def printLists(book, tBook):
 
 def priceCheck(prompt):
     # https://docs.python.org/3/library/re.html
-    pattern = re.compile('^[0-9]*\.[0-9]{2}$')
+    pattern = re.compile('^[0-9]+\.?[0-9]*$')
     price = input(f"{prompt} (Form .00): ")
     while not pattern.match(price) and float(price) <= 0:
         price = input(f"Error: invalid price. {prompt} (Form .00): ")
@@ -49,8 +49,15 @@ shopMoney = 0
 
 # I got this from https://docs.python.org/3/tutorial/inputoutput.html
 lines = []
-with open('bad_list.dat') as f:
-    lines = f.readlines()
+while True:
+    outputFile = input("What file do you want to load: ")
+    try:
+        f = open(f"{outputFile}.dat", "r")
+    except:
+        print("Something went wrong, please input another file name: ")
+    else:
+        lines = f.readlines()
+        break
 
 # print(lines)
 for i, x in enumerate(lines):
@@ -65,7 +72,7 @@ for i, x in enumerate(lines):
     if (temp[0] == "Buy" and temp[1] in buy) or (temp[0] == "Sell" and temp[1] in sell):
         print(f"Error on line {i + 1}: Already in the books")
         continue
-    if not re.search('^\$[0-9]+\.*[0-9]*$', temp[2].strip()):
+    if not re.search('^\$[0-9]+\.?[0-9]*$', temp[2].strip()):
         print(f"Error on line {i + 1}: Improper price format")
         continue
     temp[2] = temp[2].strip()
@@ -137,7 +144,6 @@ while not re.search('^\w+$', outputFile):
     outputFile = input(
         "What file do you want the sale data to be stored in? (Format: only letters and numbers separated with _ don't include the extension): ")
 
-
 fileData = [f"Buy\t{x}\t${buy[x]}\n" for x in buy]
 fileData.extend([f"Sell\t{x}\t${sell[x]}\n" for x in sell])
 # I got this from https://docs.python.org/3/tutorial/inputoutput.html
@@ -146,6 +152,7 @@ try:
 except:
     print("Error opening file.")
     exit(1)
+
 locFile.writelines(fileData)
 locFile.close()
 print(f"Money from this session is {shopMoney}\nGoodbye!")
